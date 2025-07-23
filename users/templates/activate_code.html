@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}Активация инвайт-кода{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Активация инвайт-кода</h3>
+        </div>
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="invite_code" class="form-label">Инвайт-код</label>
+                    <input type="text" class="form-control" id="invite_code" name="invite_code" required
+                           placeholder="Введите 6-значный инвайт-код">
+                </div>
+                <button type="submit" class="btn btn-primary">Активировать</button>
+                <a href="{% url 'profile' %}" class="btn btn-secondary">Вернуться в профиль</a>
+            </form>
+        </div>
+    </div>
+{% endblock %}

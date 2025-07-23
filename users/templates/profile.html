@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title %}Профиль{% endblock %}
+
+{% block content %}
+    <div class="card mb-4">
+        <div class="card-header">
+            <h3 class="card-title">Ваш профиль</h3>
+        </div>
+        <div class="card-body">
+            <p><strong>Номер телефона:</strong> {{ user.phone }}</p>
+            <p><strong>Ваш инвайт-код:</strong> {{ user.invite_code }}</p>
+
+            {% if user.activated_invite_code %}
+                <p><strong>Активированный инвайт-код:</strong> {{ user.activated_invite_code }}</p>
+            {% else %}
+                <p>Вы еще не активировали инвайт-код. <a href="{% url 'activate_code' %}">Активировать код</a></p>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Ваши рефералы</h3>
+        </div>
+        <div class="card-body">
+            {% if referrals %}
+                <ul class="list-group">
+                    {% for referral in referrals %}
+                        <li class="list-group-item">{{ referral.phone }}</li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>У вас пока нет рефералов</p>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
