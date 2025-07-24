@@ -1,0 +1,354 @@
+{
+	"info": {
+		"_postman_id": "6f100c97-a5b4-4723-983c-5578d9610548",
+		"name": "Referral API",
+		"description": "Коллекция запросов для тестирования реферального API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "34345568"
+	},
+	"item": [
+		{
+			"name": "[User1] Запрос кода",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let data = pm.response.json();\r",
+							"pm.collectionVariables.set(\"user1_code\", data.debug_code);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"phone\": \"{{user1_phone}}\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/request-code/",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"request-code",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[User1] Проверка кода",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let data = pm.response.json();",
+							"pm.collectionVariables.set(\"user1_access_token\", data.access);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"phone\": \"{{user1_phone}}\",\n  \"code\": \"{{user1_code}}\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/verify-code/",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"verify-code",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[User1] Получить профиль",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let data = pm.response.json();\r",
+							"pm.collectionVariables.set(\"user1_invite_code\", data.invite_code);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{user1_access_token}}"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/profile",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"profile"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[User2] Запрос кода",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let data = pm.response.json();\r",
+							"pm.collectionVariables.set(\"user2_code\", data.debug_code);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"phone\": \"{{user2_phone}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/request-code/",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"request-code",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[User2] Проверка кода",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let data = pm.response.json();\r",
+							"pm.collectionVariables.set(\"user2_access_token\", data.access);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"phone\": \"{{user2_phone}}\",\r\n  \"code\": \"{{user2_code}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/verify-code/",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"verify-code",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Активировать инвайт-код",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{user2_access_token}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"invite_code\": \"{{user1_invite_code}}\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/activate-invite-code/",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"activate-invite-code",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[User2] Получить профиль",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{user2_access_token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/profile",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"profile"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[User1] Получить профиль",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{user1_access_token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/profile",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"profile"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8000/api"
+		},
+		{
+			"key": "user1_access_token",
+			"value": ""
+		},
+		{
+			"key": "user1_phone",
+			"value": "+79123456789"
+		},
+		{
+			"key": "user1_code",
+			"value": ""
+		},
+		{
+			"key": "user2_phone",
+			"value": "+79123456781",
+			"type": "string"
+		},
+		{
+			"key": "user2_code",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "user2_access_token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "user1_invite_code",
+			"value": ""
+		}
+	]
+}
