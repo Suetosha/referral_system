@@ -1,5 +1,5 @@
 from django.urls import path
-from drf_spectacular.views import SpectacularRedocView
+from drf_spectacular.views import SpectacularRedocView, SpectacularAPIView
 
 from . import api_views, template_views
 
@@ -11,6 +11,7 @@ urlpatterns = [
     path('api/activate-invite-code/', api_views.ActivateInviteCodeView.as_view(), name='api_activate_invite_code'),
 
     # Документация API
+    path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
     path('api/schema/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
 
     # Веб интерфейс
