@@ -5,6 +5,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from .serializers import PhoneRequestSerializer, CodeVerifySerializer, UserProfileSerializer, \
     ActivateInviteCodeSerializer
+from rest_framework.exceptions import ValidationError
+from rest_framework import status
 from .auth import generate_verification_code, save_code_to_cache, get_code_from_cache, generate_invite_code
 from .models import User
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -42,6 +44,10 @@ class RequestCodeView(APIView):
             time.sleep(2)
 
             return Response({'detail': 'Код отправлен', 'debug_code': code}, status=200)
+
+        except ValidationError as e:
+            return Response(e.detail, status=status.HTTP_400_BAD_REQUEST)
+
         except Exception as e:
             return Response({'error': str(e)}, status=400)
 

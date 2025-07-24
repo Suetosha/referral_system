@@ -11,7 +11,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['34.133.84.90', 'localhost', '127.0.0.1']
 
 INSTALLED_APPS = [
     'django.contrib.auth',

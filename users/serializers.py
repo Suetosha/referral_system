@@ -1,3 +1,4 @@
+import re
 from drf_spectacular.utils import extend_schema_serializer, OpenApiExample, extend_schema_field
 from rest_framework import serializers
 
@@ -11,10 +12,17 @@ from .models import User
         )
     ]
 )
+
 class PhoneRequestSerializer(serializers.Serializer):
     phone = serializers.CharField(
         max_length=15
     )
+
+    def validate_phone(self, value):
+        if not re.match(r'^\+7\d{10}$', value):
+            raise serializers.ValidationError('Введите корректный номер телефона в формате +7XXXXXXXXXX')
+        return value
+
 
 @extend_schema_serializer(
     examples=[

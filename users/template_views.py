@@ -18,7 +18,6 @@ load_dotenv()
 BASE_URL = os.getenv('API_BASE_URL', 'http://localhost:8000/api/')
 
 
-
 # Страница для ввода номера телефона
 class LoginPhoneView(View):
 
@@ -28,21 +27,23 @@ class LoginPhoneView(View):
     def post(self, request):
         phone = request.POST.get('phone')
 
-        # Запрос к API для отправки кода
         response = requests.post(f"{BASE_URL}request-code/", json={'phone': phone})
         data = response.json()
 
         if response.status_code == 200:
-            # Сохраняем телефон в сессии для следующего шага
             request.session['phone'] = phone
-
-            # Отображаем код
             messages.success(request, f"Код отправлен. Демо-код: {data.get('debug_code')}")
-
             return redirect('verify_code')
-        else:
-            messages.error(request, data.get('detail', 'Произошла ошибка'))
-            return render(request, 'login_phone.html')
+
+        error_message = data.get('detail', 'Произошла ошибка')
+
+        if 'phone' in data:
+            phone_errors = data['phone']
+            if isinstance(phone_errors, list) and phone_errors:
+                error_message = phone_errors[0]
+
+        messages.error(request, error_message)
+        return render(request, 'login_phone.html', {'phone': phone})
 
 # Страница для ввода проверочного кода
 class VerifyCodeView(View):

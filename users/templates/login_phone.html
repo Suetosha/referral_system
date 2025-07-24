@@ -8,12 +8,27 @@
             <h3 class="card-title">Введите номер телефона</h3>
         </div>
         <div class="card-body">
+            {% if messages %}
+                <div>
+                    {% for message in messages %}
+                        <div class="alert {{ message.tags }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
             <form method="post">
                 {% csrf_token %}
                 <div class="mb-3">
                     <label for="phone" class="form-label">Номер телефона</label>
-                    <input type="tel" class="form-control" id="phone" name="phone" required
-                           placeholder="+7XXXXXXXXXX">
+                    <input
+                        type="tel"
+                        class="form-control"
+                        id="phone"
+                        name="phone"
+                        required
+                        placeholder="+7XXXXXXXXXX"
+                        value="{{ phone|default:'' }}"
+                    >
                     <div class="form-text">Введите номер в формате +7XXXXXXXXXX</div>
                 </div>
                 <button type="submit" class="btn btn-primary">Получить код</button>
