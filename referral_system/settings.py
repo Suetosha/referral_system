@@ -22,6 +22,9 @@ INSTALLED_APPS = [
 
     'rest_framework',
     'rest_framework_simplejwt',
+    'drf_spectacular',
+    'drf_spectacular_sidecar',
+
     'users',
 ]
 
@@ -29,6 +32,7 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 
 CACHES = {
@@ -36,6 +40,29 @@ CACHES = {
         "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
         "LOCATION": "auth-cache",
     }
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'API документация',
+    'DESCRIPTION': 'Документация API для проекта с реферальной системы',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+
+    # Настройки ui
+    'SWAGGER_UI_DIST': 'SIDECAR',
+    'SWAGGER_UI_FAVICON_HREF': 'SIDECAR',
+    'REDOC_DIST': 'SIDECAR',
+
+    # Группировка эндпоинтов
+    'TAGS': [
+        {'name': 'Аутентификация', 'description': 'Методы для работы с аутентификацией'},
+        {'name': 'Профиль', 'description': 'Управление профилем пользователя'},
+        {'name': 'Инвайт-коды', 'description': 'Работа с инвайт-кодами'},
+    ],
+
+    # Дополнительные настройки
+    'COMPONENT_SPLIT_REQUEST': True,
+    'SORT_OPERATIONS': False,
 }
 
 MIDDLEWARE = [
@@ -102,7 +129,8 @@ USE_I18N = True
 
 USE_TZ = True
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 

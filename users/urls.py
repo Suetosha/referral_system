@@ -1,4 +1,6 @@
 from django.urls import path
+from django.views.generic import TemplateView
+from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
 
 from . import api_views, template_views
 
@@ -8,6 +10,12 @@ urlpatterns = [
     path('api/verify-code/', api_views.VerifyCodeView.as_view(), name='api_verify_code'),
     path('api/profile/', api_views.ProfileView.as_view(), name='api_profile'),
     path('api/activate-invite-code/', api_views.ActivateInviteCodeView.as_view(), name='api_activate_invite_code'),
+
+    # Документация API
+    path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
+    path('api/schema/swagger-ui/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
+    path('api/schema/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
+    path('redoc/', TemplateView.as_view(template_name='custom_redoc.html'), name='custom-redoc'),
 
     # Веб интерфейс
     path('login-phone/', template_views.LoginPhoneView.as_view(), name='login_phone'),

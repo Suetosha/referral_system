@@ -1,4 +1,6 @@
 import time
+
+from drf_spectacular.utils import extend_schema, OpenApiResponse, OpenApiExample
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .serializers import PhoneRequestSerializer, CodeVerifySerializer, UserProfileSerializer, \
@@ -10,6 +12,24 @@ from rest_framework.permissions import IsAuthenticated
 
 
 class RequestCodeView(APIView):
+    @extend_schema(
+        tags=['Аутентификация'],
+        description='Отправка запроса на получение кода верификации на указанный номер телефона',
+        request=PhoneRequestSerializer,
+        responses={
+            200: OpenApiResponse(
+                description='Код успешно отправлен',
+                examples=[
+                    OpenApiExample(
+                        'Успешный ответ',
+                        value={'detail': 'Код отправлен', 'debug_code': '1234'}
+                    )
+                ]
+            ),
+            400: OpenApiResponse(description='Ошибка в запросе')
+        }
+    )
+
     def post(self, request):
         try:
             serializer = PhoneRequestSerializer(data=request.data)
@@ -27,6 +47,35 @@ class RequestCodeView(APIView):
 
 
 class VerifyCodeView(APIView):
+    @extend_schema(
+        tags=['Аутентификация'],
+        description='Проверка кода верификации и получение токенов доступа',
+        request=CodeVerifySerializer,
+        responses={
+            200: OpenApiResponse(
+                description='Код успешно проверен, возвращаются токены доступа',
+                examples=[
+                    OpenApiExample(
+                        'Успешный ответ',
+                        value={
+                            'refresh': 'eyJ0eXAiOiJKV1QiLCJhbG...',
+                            'access': 'eyJ0eXAiOiJKV1QiLCJhbG...'
+                        }
+                    )
+                ]
+            ),
+            400: OpenApiResponse(
+                description='Ошибка проверки кода',
+                examples=[
+                    OpenApiExample(
+                        'Неверный код',
+                        value={'detail': 'Неверный код'}
+                    )
+                ]
+            )
+        }
+    )
+
     def post(self, request):
         try:
             serializer = CodeVerifySerializer(data=request.data)
@@ -64,6 +113,14 @@ class VerifyCodeView(APIView):
 class ProfileView(APIView):
     permission_classes = [IsAuthenticated]
 
+    @extend_schema(
+        tags=['Профиль'],
+        description='Получение информации о профиле авторизованного пользователя',
+        responses={
+            200: UserProfileSerializer,
+            401: OpenApiResponse(description='Не авторизован')
+        }
+    )
     def get(self, request):
         user = request.user
         serializer = UserProfileSerializer(user)
@@ -72,6 +129,41 @@ class ProfileView(APIView):
 
 class ActivateInviteCodeView(APIView):
     permission_classes = [IsAuthenticated]
+
+    @extend_schema(
+        tags=['Инвайт-коды'],
+        description='Активация инвайт-кода другого пользователя',
+        request=ActivateInviteCodeSerializer,
+        responses={
+            200: OpenApiResponse(
+                description='Инвайт-код успешно активирован',
+                examples=[
+                    OpenApiExample(
+                        'Успешная активация',
+                        value={'detail': 'Инвайт-код успешно активирован'}
+                    )
+                ]
+            ),
+            400: OpenApiResponse(
+                description='Ошибка активации инвайт-кода',
+                examples=[
+                    OpenApiExample(
+                        'Уже активирован',
+                        value={'detail': 'Вы уже активировали инвайт-код'}
+                    ),
+                    OpenApiExample(
+                        'Не существует',
+                        value={'detail': 'Инвайт-код не существует'}
+                    ),
+                    OpenApiExample(
+                        'Свой код',
+                        value={'detail': 'Вы не можете активировать свой собственный инвайт-код'}
+                    )
+                ]
+            ),
+            401: OpenApiResponse(description='Не авторизован')
+        }
+    )
 
     def post(self, request):
         user = request.user

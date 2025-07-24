@@ -1,3 +1,5 @@
+import os
+
 from django.shortcuts import render, redirect
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -7,9 +9,14 @@ from .models import User
 from django.contrib.auth import login
 from django.contrib import messages
 import jwt
+from dotenv import load_dotenv
+
+load_dotenv()
+
 
 # Базовый url для API запросов
-BASE_URL = 'http://localhost:8000/api/'
+BASE_URL = os.getenv('API_BASE_URL', 'http://localhost:8000/api/')
+
 
 
 # Страница для ввода номера телефона
