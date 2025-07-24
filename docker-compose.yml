@@ -1,10 +1,6 @@
-version: '3.9'
-
 services:
   web:
     image: suetosha/referral_system:latest
-    volumes:
-      - .:/app
     ports:
       - "8000:8000"
     depends_on:
